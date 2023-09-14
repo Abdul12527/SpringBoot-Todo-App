@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 @Service
 public class CuredServices {
     @Autowired
@@ -23,6 +25,12 @@ public class CuredServices {
             return false;
         }
 
+    }
+    public boolean addRecords(List<Todo> todos){
+        for(Todo todo:todos){
+            if(!addRecord(todo))return false;
+        }
+        return true;
     }
     public boolean checkTitel(String title){
         return hm.containsKey(title);
@@ -62,5 +70,10 @@ public class CuredServices {
 
     public void deletAll(){
         hm=new HashMap<>();
+    }
+
+    public boolean deleteList(List<String> todoTiltels){
+        for(var i:todoTiltels)if(!deleteRecord(i))return false;
+        return true;
     }
 }

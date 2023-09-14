@@ -8,28 +8,41 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 public class CurdController {
     @Autowired
     CuredServices services;
 
-    @PostMapping("/todo/add")
+    @PostMapping("/todo")
     public String addTask(@RequestBody Todo task){
-        if(services.addRecord(task)) return "added successfully";
-        return "Something went Wrong";
+        if(services.addRecord(task)) return "200 added successfully";
+        return "500 Something went Wrong";
+    }
+    @PutMapping("/todos")
+    public String addTasks(List<Todo> todos){
+        if(services.addRecords(todos))return "200 added successfully";
+        return "500 Something went Wrong";
     }
 
-    @PutMapping("/todo/update/")
+    @PutMapping("/todo")
     public String updateStatus(@RequestParam String title,@RequestParam Status status){
-        if(services.updateStatus(title,status))return "updated sucessfully";
-        return "some thing wrong";
+        if(services.updateStatus(title,status))return "200 updated successfully";
+        return "500 some thing wrong";
     }
-    @DeleteMapping("/todo/delete")
+    @DeleteMapping("/todo")
     public String deleteRecord(@RequestParam String title){
-        if(services.deleteRecord(title))return "deleted successfully";
-        return "some thing went wrong";
+        if(services.deleteRecord(title))return "200 deleted successfully";
+        return "500 some thing went wrong";
     }
+
+    public String deleteRecords(List<String> titles){
+        if(services.deleteList(titles))return "200 added successfully";
+        return "500 Something went Wrong";
+    }
+
+
 
 
 }
