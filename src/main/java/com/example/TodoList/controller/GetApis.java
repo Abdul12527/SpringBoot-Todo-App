@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 public class GetApis {
@@ -23,13 +24,12 @@ public class GetApis {
     }
 
     @GetMapping("/todo/mytasks")
-    public HashMap<String, Todo> getList(){
+    public List<Todo> getList(){
         return services.getAll();
     }
 
     @GetMapping("/todo/status/{title}")
-    public String getStatus(@PathVariable String title){
-        if(!services.checkTitel(title))return "wrong op";
-        return services.getStatus(title).toString();
+    public String getStatus(@PathVariable Integer id){
+        return services.getStatus(id).toString();
     }
 }

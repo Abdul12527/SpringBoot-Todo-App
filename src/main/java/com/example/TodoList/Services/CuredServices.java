@@ -2,78 +2,63 @@ package com.example.TodoList.Services;
 
 import com.example.TodoList.Entities.Status;
 import com.example.TodoList.Entities.Todo;
+import com.example.TodoList.Properties.ITodoDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CuredServices {
     @Autowired
-    HashMap<String, Todo> hm;
+    ITodoDB iTodoDB;
 
     public boolean addRecord(Todo task){
-        try {
-            hm.put(task.getTitle(),task);
-            return true;
-        }
-        catch (Exception e){
-            System.out.println(e);
-            return false;
-        }
-
-    }
-    public boolean addRecords(List<Todo> todos){
-        for(Todo todo:todos){
-            if(!addRecord(todo))return false;
-        }
+        iTodoDB.save(task);
         return true;
     }
-    public boolean checkTitel(String title){
-        return hm.containsKey(title);
-    }
-    public boolean updateStatus(String title, Status status){
-        if(hm.containsKey(title)){
-            Todo temp=hm.get(title);
-            temp.setStatus(status);
-            hm.put(title,temp);
-            return true;
-        }
-        return false;
-    }
-    public HashMap<String,Todo> getAll(){
-        return hm;
-    }
-    public Status getStatus(String title){
-        if(hm.get(title).getDate().before(new Date())&&!hm.get(title).getStatus().equals(Status.Done))return Status.Delayed;
-        return hm.get(title).getStatus();
+    public boolean addRecords(List<Todo> todos){
+        iTodoDB.saveAll(todos);
+        return true;
     }
 
-    public boolean deleteRecord(String title){
-        if(hm.containsKey(title)){
-            hm.remove(title);
-            return true;
-        }
-        return false;
+    public boolean updateStatus(Integer id, Status status){
+        if(!iTodoDB.existsById(id))return false;
+        Optional<Todo> temp=iTodoDB.findById(id);
+        Todo temp2=temp.get();
+        temp2.setStatus(status);
+        iTodoDB.save(temp2);
+        return true;
+
+    }
+    public List<Todo> getAll(){
+        return (List<Todo>) iTodoDB.findAll();
+    }
+    public Status getStatus(Integer id){
+        return iTodoDB.findById(id).get().getStatus();
+    }
+
+    public boolean deleteRecord(Integer id){
+        if(!iTodoDB.existsById(id))return false;
+        iTodoDB.deleteById(id);
+        return true;
     }
 
     public ArrayList<Todo> recordsWithStarted(Status status){
         ArrayList<Todo> ans=new ArrayList<>();
-        for(var i:hm.keySet()){
-            if(hm.get(i).getStatus().equals(status))ans.add(hm.get(i));
+        List<Todo> all=(List<Todo>) iTodoDB.findAll();
+        for(Todo i:all){
+            if(i.getStatus().equals(status))ans.add(i);
         }
         return ans;
     }
 
     public void deletAll(){
-        hm=new HashMap<>();
+        iTodoDB.deleteAll();
     }
 
-    public boolean deleteList(List<String> todoTiltels){
-        for(var i:todoTiltels)if(!deleteRecord(i))return false;
+    public boolean deleteList(List<Integer> todoTiltels){
+        iTodoDB.deleteAllById(todoTiltels);
         return true;
     }
 }

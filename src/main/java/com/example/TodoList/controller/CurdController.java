@@ -20,25 +20,25 @@ public class CurdController {
         if(services.addRecord(task)) return "200 added successfully";
         return "500 Something went Wrong";
     }
-    @PutMapping("/todos")
-    public String addTasks(List<Todo> todos){
+    @PostMapping("/todos")
+    public String addTasks(@RequestBody List<Todo> todos){
         if(services.addRecords(todos))return "200 added successfully";
         return "500 Something went Wrong";
     }
 
     @PutMapping("/todo")
-    public String updateStatus(@RequestParam String title,@RequestParam Status status){
-        if(services.updateStatus(title,status))return "200 updated successfully";
+    public String updateStatus(@RequestParam Integer id,@RequestParam Status status){
+        if(services.updateStatus(id,status))return "200 updated successfully";
         return "500 some thing wrong";
     }
     @DeleteMapping("/todo")
-    public String deleteRecord(@RequestParam String title){
-        if(services.deleteRecord(title))return "200 deleted successfully";
+    public String deleteRecord(@RequestParam Integer id){
+        if(services.deleteRecord(id))return "200 deleted successfully";
         return "500 some thing went wrong";
     }
-
-    public String deleteRecords(List<String> titles){
-        if(services.deleteList(titles))return "200 added successfully";
+    @DeleteMapping("/todos")
+    public String deleteRecords(@RequestParam List<Integer> ids){
+        if(services.deleteList(ids))return "200 added successfully";
         return "500 Something went Wrong";
     }
 
