@@ -19,7 +19,7 @@ public class GetApis {
     CuredServices services;
 
     @GetMapping("/todo/startedTask")
-    public ArrayList<Todo> startedTasks(@RequestParam Status status){
+    public List<Todo> startedTasks(@RequestParam Status status){
         return services.recordsWithStarted(status);
     }
 
@@ -31,5 +31,14 @@ public class GetApis {
     @GetMapping("/todo/status/{title}")
     public String getStatus(@PathVariable Integer id){
         return services.getStatus(id).toString();
+    }
+    @GetMapping("todo/title/{title}")
+    public List<Todo> findByTitle(@PathVariable String title){
+        return services.getByTitle(title);
+    }
+
+    @GetMapping("/todo/nonStarted/nonDone")
+    public List<Todo> findAllNonStartedOrDoneTask(){
+        return services.findAllNonStartedOrDoneTask();
     }
 }

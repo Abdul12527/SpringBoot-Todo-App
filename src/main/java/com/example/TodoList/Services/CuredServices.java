@@ -2,7 +2,7 @@ package com.example.TodoList.Services;
 
 import com.example.TodoList.Entities.Status;
 import com.example.TodoList.Entities.Todo;
-import com.example.TodoList.Properties.ITodoDB;
+import com.example.TodoList.Repository.ITodoDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +44,8 @@ public class CuredServices {
         return true;
     }
 
-    public ArrayList<Todo> recordsWithStarted(Status status){
-        ArrayList<Todo> ans=new ArrayList<>();
-        List<Todo> all=(List<Todo>) iTodoDB.findAll();
-        for(Todo i:all){
-            if(i.getStatus().equals(status))ans.add(i);
-        }
-        return ans;
+    public List<Todo> recordsWithStarted(Status status){
+        return iTodoDB.findByStatus(Status.Started);
     }
 
     public void deletAll(){
@@ -60,5 +55,12 @@ public class CuredServices {
     public boolean deleteList(List<Integer> todoTiltels){
         iTodoDB.deleteAllById(todoTiltels);
         return true;
+    }
+    public List<Todo> getByTitle(String title){
+        return iTodoDB.findByTitle(title);
+    }
+
+    public List<Todo> findAllNonStartedOrDoneTask(){
+        return iTodoDB.findByStatusIsNotAndStatusIsNot(Status.Done,Status.Started);
     }
 }
